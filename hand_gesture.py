@@ -1,37 +1,36 @@
+from flask import Flask, render_template, Response
 import cv2
 import mediapipe as mp
-import time
 
+app = Flask(__name__)
 mpHands = mp.solutions.hands
 hands = mpHands.Hands()
 mpDraw = mp.solutions.drawing_utils
-
 cap = cv2.VideoCapture(0)
-pTime = 0
 
-while True:
-    success, img = cap.read()
-    imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    results = hands.process(imgRGB)
+def generate_frames():
+    while True:
+        success, frame = cap.read()
+        if not success:
+            break
+        else:
+            imgRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            results = hands.process(imgRGB)
+            if results.multi_hand_landmarks:
+                for handLms in results.multi_hand_landmarks:
+                    mpDraw.draw_landmarks(frame, handLms, mpHands.HAND_CONNECTIONS)
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-    if results.multi_hand_landmarks:
-        for handLms in results.multi_hand_landmarks:
-            mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-            for id, lm in enumerate(handLms.landmark):
-                h, w, c = img.shape
-                cx, cy = int(lm.x * w), int(lm.y * h)
-                cv2.putText(img, str(id), (cx, cy), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
+@app.route('/video')
+def video():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-    cTime = time.time()
-    fps = 1 / (cTime - pTime)
-    pTime = cTime
-
-    cv2.putText(img, f'FPS: {int(fps)}', (10, 70), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
-    cv2.imshow("Hand Gesture Detection", img)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+if __name__ == '__main__':
+    app.run(debug=True)
