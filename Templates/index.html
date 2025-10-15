@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hand Gesture Detection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    img.live {
+      border: 2px solid #333;
+      margin-top: 20px;
+      width: 640px;
+      height: 480px;
+    }
+    .resources {
+      margin-top: 40px;
+    }
+    .resources img {
+      width: 300px;
+      margin: 10px;
+      border-radius: 8px;
+    }
+    iframe {
+      width: 560px;
+      height: 315px;
+      margin: 20px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hand Gesture Detection Using OpenCV</h1>
+  <img class="live" src="{{ url_for('video') }}" alt="Live Webcam Feed">
+
+  <div class="resources">
+    <h2>🔍 Reference Images</h2>
+    <a href="https://techvidvan.com/tutorials/hand-gesture-recognition-tensorflow-opencv/" target="_blank">
+      <img src="https://techvidvan.com/wp-content/uploads/2020/07/Hand-Gesture-Recognition.jpg" alt="Gesture Detection Example">
+    </a>
+    <a href="https://aihubprojects.com/hand-detection-gesture-recognition-opencv-python/" target="_blank">
+      <img src="https://aihubprojects.com/wp-content/uploads/2022/03/hand-gesture-recognition-opencv-python.jpg" alt="Hand Detection">
+    </a>
+
+    <h2>🎥 Tutorial Videos</h2>
+    <iframe src="https://www.youtube.com/embed/a99p_fAr6e4" title="Custom Hand Gesture Recognition"></iframe>
+    <iframe src="https://www.youtube.com/embed/3xfOa4yeOb0" title="Multiple Hand Gesture Control with OpenCV"></iframe>
+    <iframe src="https://www.youtube.com/embed/9iEPzbG-xLE" title="Gesture Volume Control with OpenCV"></iframe>
+  </div>
+</body>
+</html>
